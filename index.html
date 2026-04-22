@@ -10,7 +10,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { min-height: 100vh; background: #000; font-family: 'Raleway', sans-serif; overflow-x: hidden; cursor: none; }
 
-    .cursor { position: fixed; width: 20px; height: 20px; background: var(--neon); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: screen; box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon); }
+    .cursor { position: fixed; width: 20px; height: 20px; background: var(--neon); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: screen; box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon); transition: transform 0.1s; }
 
     canvas { position: fixed; top: 0; left: 0; z-index: 0; }
 
@@ -35,86 +35,27 @@
     @keyframes rise { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-10vh) scale(1); opacity: 0; } }
 
     /* REACTION BAR */
-    .reaction-bar {
-      margin-top: 30px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 50px;
-      padding: 12px 24px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+    .reaction-bar { margin-top: 30px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 12px 24px; display: flex; gap: 8px; align-items: center; }
 
-    .reaction-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px 12px;
-      border-radius: 30px;
-      transition: all 0.2s;
-      position: relative;
-    }
+    .reaction-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px 12px; border-radius: 30px; transition: all 0.2s; }
+    .reaction-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.2) translateY(-5px); }
+    .reaction-btn .emoji { font-size: 2rem; display: block; transition: transform 0.2s; }
+    .reaction-btn:active .emoji { transform: scale(1.5); }
+    .reaction-btn .count { font-size: 0.75rem; color: rgba(255,255,255,0.6); font-family: 'Raleway', sans-serif; min-width: 20px; text-align: center; }
 
-    .reaction-btn:hover {
-      background: rgba(255,255,255,0.1);
-      transform: scale(1.2) translateY(-5px);
-    }
+    /* Floating reaction */
+    .float-emoji { position: fixed; pointer-events: none; z-index: 999; animation: floatAway 1.2s ease-out forwards; }
+    @keyframes floatAway { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(2); opacity: 0; } }
 
-    .reaction-btn.active {
-      background: rgba(255,110,199,0.2);
-    }
-
-    .reaction-btn .emoji {
-      font-size: 2rem;
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-      display: block;
-    }
-
-    .reaction-btn:hover .emoji {
-      transform: scale(1.3);
-    }
-
-    .reaction-btn.active .emoji {
-      animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    }
-
-    @keyframes pop {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.5); }
-      100% { transform: scale(1); }
-    }
-
-    .reaction-btn .count {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.6);
-      font-family: 'Raleway', sans-serif;
-      font-weight: 400;
-      min-width: 20px;
-      text-align: center;
-    }
-
-    .reaction-btn.active .count {
-      color: var(--neon);
-      font-weight: 700;
-    }
-
-    /* Floating reaction effect */
-    .float-emoji {
-      position: fixed;
-      pointer-events: none;
-      font-size: 2rem;
-      z-index: 999;
-      animation: floatAway 1.2s ease-out forwards;
-    }
-    @keyframes floatAway {
-      0%   { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-120px) scale(1.5); opacity: 0; }
+    /* DUCK */
+    .duck { position: fixed; pointer-events: auto; z-index: 5; cursor: pointer; user-select: none; animation: duckFly linear infinite; }
+    .duck:hover { filter: brightness(1.5); }
+    @keyframes duckFly {
+      0%   { transform: translateX(-120px) translateY(0px); }
+      25%  { transform: translateX(25vw) translateY(-30px); }
+      50%  { transform: translateX(50vw) translateY(10px); }
+      75%  { transform: translateX(75vw) translateY(-20px); }
+      100% { transform: translateX(110vw) translateY(0px); }
     }
 
     .tag { margin-top: 30px; font-size: 0.75rem; letter-spacing: 6px; color: rgba(255,255,255,0.25); text-transform: uppercase; }
@@ -128,7 +69,7 @@
 <div class="orb orb2"></div>
 
 <div class="container">
-  <h1>✦ Xí Chiến Đo ✦</h1>
+  <h1>✦ Ảnh Của Tôi ✦</h1>
   <p class="subtitle">my gallery &nbsp;·&nbsp; 2024</p>
 
   <div class="photo-wrapper">
@@ -137,35 +78,27 @@
     </div>
   </div>
 
-  <!-- REACTION BAR -->
   <div class="reaction-bar">
-    <button class="reaction-btn" data-emoji="❤️" onclick="react(this)">
-      <span class="emoji">❤️</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="❤️" onclick="react(this, event)">
+      <span class="emoji">❤️</span><span class="count">0</span>
     </button>
-    <button class="reaction-btn" data-emoji="😂" onclick="react(this)">
-      <span class="emoji">😂</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="😂" onclick="react(this, event)">
+      <span class="emoji">😂</span><span class="count">0</span>
     </button>
-    <button class="reaction-btn" data-emoji="😮" onclick="react(this)">
-      <span class="emoji">😮</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="😮" onclick="react(this, event)">
+      <span class="emoji">😮</span><span class="count">0</span>
     </button>
-    <button class="reaction-btn" data-emoji="😢" onclick="react(this)">
-      <span class="emoji">😢</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="😢" onclick="react(this, event)">
+      <span class="emoji">😢</span><span class="count">0</span>
     </button>
-    <button class="reaction-btn" data-emoji="😡" onclick="react(this)">
-      <span class="emoji">😡</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="😡" onclick="react(this, event)">
+      <span class="emoji">😡</span><span class="count">0</span>
     </button>
-    <button class="reaction-btn" data-emoji="🥰" onclick="react(this)">
-      <span class="emoji">🥰</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="🥰" onclick="react(this, event)">
+      <span class="emoji">🥰</span><span class="count">0</span>
     </button>
-    <button class="reaction-btn" data-emoji="👏" onclick="react(this)">
-      <span class="emoji">👏</span>
-      <span class="count">0</span>
+    <button class="reaction-btn" data-emoji="👏" onclick="react(this, event)">
+      <span class="emoji">👏</span><span class="count">0</span>
     </button>
   </div>
 
@@ -183,8 +116,7 @@
   // Stars
   const canvas = document.getElementById('stars');
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
   window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initStars(); });
   let stars = [];
   function initStars() {
@@ -193,17 +125,17 @@
   initStars();
   function drawStars() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    stars.forEach(s => { s.a += s.speed*s.dir; if(s.a>1||s.a<0) s.dir*=-1; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${s.a})`; ctx.fill(); });
+    stars.forEach(s => { s.a+=s.speed*s.dir; if(s.a>1||s.a<0) s.dir*=-1; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${s.a})`; ctx.fill(); });
     requestAnimationFrame(drawStars);
   }
   drawStars();
 
-  // Particles
-  const emojis = ['✦','✧','⋆','❋','✺'];
+  // Star particles
+  const symbols = ['✦','✧','⋆','❋','✺'];
   function spawnParticle() {
     const p = document.createElement('div');
     p.classList.add('particle');
-    p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    p.textContent = symbols[Math.floor(Math.random()*symbols.length)];
     p.style.left = Math.random()*100+'vw';
     p.style.fontSize = (0.6+Math.random()*1.2)+'rem';
     p.style.color = ['#ff6ec7','#7ef9ff','#ffd700','#fff'][Math.floor(Math.random()*4)];
@@ -215,25 +147,50 @@
   }
   setInterval(spawnParticle, 400);
 
-  // Reactions
-  function react(btn) {
-    const isActive = btn.classList.toggle('active');
+  // REACTION - nhấn nhiều lần được
+  function react(btn, e) {
     const countEl = btn.querySelector('.count');
-    let count = parseInt(countEl.textContent);
-    countEl.textContent = isActive ? count + 1 : count - 1;
+    countEl.textContent = parseInt(countEl.textContent) + 1;
 
-    if (isActive) {
-      // Float emoji up
-      const rect = btn.getBoundingClientRect();
-      const floater = document.createElement('div');
-      floater.classList.add('float-emoji');
-      floater.textContent = btn.dataset.emoji;
-      floater.style.left = rect.left + rect.width/2 - 16 + 'px';
-      floater.style.top  = rect.top - 10 + 'px';
-      document.body.appendChild(floater);
-      setTimeout(() => floater.remove(), 1200);
-    }
+    // Float emoji lên
+    const floater = document.createElement('div');
+    floater.classList.add('float-emoji');
+    floater.textContent = btn.dataset.emoji;
+    floater.style.left = (e.clientX - 16) + 'px';
+    floater.style.top  = (e.clientY - 10) + 'px';
+    floater.style.fontSize = (1.5 + Math.random()) + 'rem';
+    document.body.appendChild(floater);
+    setTimeout(() => floater.remove(), 1200);
   }
+
+  // DUCKS BAY
+  const duckEmojis = ['🦆','🐥','🐤','🐣'];
+  function spawnDuck() {
+    const duck = document.createElement('div');
+    duck.classList.add('duck');
+    duck.textContent = duckEmojis[Math.floor(Math.random()*duckEmojis.length)];
+    duck.style.top = (10 + Math.random() * 80) + 'vh';
+    duck.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
+    const dur = 5 + Math.random() * 8;
+    duck.style.animationDuration = dur + 's';
+    duck.style.animationDelay = '0s';
+
+    // Click vịt thì nổ
+    duck.onclick = () => {
+      duck.textContent = '💥';
+      duck.style.transition = 'transform 0.2s';
+      duck.style.transform += ' scale(2)';
+      setTimeout(() => duck.remove(), 400);
+    };
+
+    document.body.appendChild(duck);
+    setTimeout(() => duck.remove(), (dur + 1) * 1000);
+  }
+
+  // Spawn vịt liên tục
+  setInterval(spawnDuck, 1200);
+  // Spawn vài con lúc đầu luôn
+  for(let i = 0; i < 4; i++) setTimeout(spawnDuck, i * 400);
 </script>
 </body>
 </html>
