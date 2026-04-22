@@ -6,25 +6,61 @@
   <title>Ảnh của tôi</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #111; color: white; font-family: Arial, sans-serif; }
-    h1 { text-align: center; padding: 30px; font-size: 2rem; color: #f0a500; }
+    body {
+      background: #87CEEB;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+    h1 { text-align: center; padding: 30px; font-size: 2rem; color: #fff; text-shadow: 2px 2px 4px #333; }
     .gallery {
       display: flex;
       justify-content: center;
       padding: 20px;
+      position: relative;
+      z-index: 10;
     }
     .gallery img {
       width: 500px;
       height: 500px;
       object-fit: cover;
       border-radius: 15px;
+      border: 5px solid #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    .duck {
+      position: fixed;
+      font-size: 2rem;
+      animation: float linear infinite;
+      z-index: 1;
+      cursor: pointer;
+    }
+    @keyframes float {
+      0% { transform: translateX(-100px); }
+      100% { transform: translateX(110vw); }
     }
   </style>
 </head>
 <body>
-  <h1>📸 Đây là tôi sao mỗi lần bệnh:</h1>
+  <h1>📸 Xíi</h1>
   <div class="gallery">
     <img src="anh.jpg">
   </div>
+
+  <script>
+    const ducks = ['🦆','🐥','🐤','🐣'];
+    function createDuck() {
+      const duck = document.createElement('div');
+      duck.classList.add('duck');
+      duck.textContent = ducks[Math.floor(Math.random() * ducks.length)];
+      duck.style.top = Math.random() * 90 + 'vh';
+      duck.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
+      const duration = 4 + Math.random() * 6;
+      duck.style.animationDuration = duration + 's';
+      duck.onclick = () => { duck.textContent = '💥'; setTimeout(() => duck.remove(), 300); };
+      document.body.appendChild(duck);
+      setTimeout(() => duck.remove(), duration * 1000);
+    }
+    setInterval(createDuck, 600);
+  </script>
 </body>
 </html>
